@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>ADICCIONES CERO</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #f8bbd0, #fce4ec); /* Rosa de fondo con toque suave */
+      margin: 0;
+      padding: 30px;
+      color: #333;
+      overflow-x: hidden;
+      animation: fadeIn 3s ease-out;
+    }
+    h1 {
+      text-align: center;
+      color: #ab47bc;
+      font-size: 2.8em;
+      margin-bottom: 30px;
+      text-shadow: 1px 1px 2px #fff, 0 0 25px #ab47bc, 0 0 5px #ab47bc;
+      animation: textGlow 2s infinite alternate;
+    }
+    @keyframes textGlow {
+      0% { text-shadow: 1px 1px 2px #fff, 0 0 25px #ab47bc, 0 0 5px #ab47bc; }
+      100% { text-shadow: 1px 1px 2px #fff, 0 0 25px #f8bbd0, 0 0 5px #f8bbd0; }
+    }
+    .nivel {
+      background: #fff;
+      border-radius: 20px;
+      padding: 25px;
+      margin: 25px auto;
+      max-width: 700px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      display: none;
+      transition: all 0.3s ease-in-out;
+      animation: floatIn 1s ease-in-out;
+    }
+    @keyframes floatIn {
+      0% { transform: translateY(-50px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+    h2 {
+      color: #ba68c8;
+      font-size: 1.8em;
+      margin-bottom: 15px;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 14px 18px;
+      margin: 15px 0;
+      border: none;
+      border-radius: 15px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      background-color: #e1bee7;
+      color: #7b1fa2;
+    }
+    .btn:hover {
+      transform: scale(1.1);
+      background-color: #ab47bc;
+      color: #fff;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      animation: magicGlow 1s infinite alternate;
+    }
+    .btn:active {
+      transform: scale(0.98);
+    }
+    @keyframes magicGlow {
+      0% { text-shadow: 0 0 10px #f8bbd0, 0 0 20px #ab47bc; }
+      100% { text-shadow: 0 0 15px #ab47bc, 0 0 30px #e1bee7; }
+    }
+    .verde { background-color: #81c784; color: white; }
+    .amarillo { background-color: #ffeb3b; color: black; }
+    .rojo { background-color: #f44336; color: white; }
+    .mensaje {
+      margin: 20px 0;
+      font-size: 18px;
+      background: #f1f8e9;
+      padding: 15px;
+      border-left: 5px solid #8bc34a;
+      border-radius: 10px;
+    }
+    textarea {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      resize: vertical;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    .personaje {
+      display: block;
+      margin: 30px auto;
+      width: 250px;
+      animation: flotar 2s infinite ease-in-out;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    @keyframes flotar {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .reflexion h3 {
+      color: #00796b;
+      margin-bottom: 10px;
+    }
+    .final {
+      text-align: center;
+      font-size: 22px;
+      margin-top: 40px;
+      color: #00796b;
+    }
+    /* Música suave */
+    audio {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      height: 50px;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
+  <h1>✨ Vamos, elige el camino correcto ✨</h1>
+  <div id="nivelesContainer"></div>
+  <audio autoplay loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    const niveles = [
+      {
+        titulo: "Nivel 1",
+        opciones: [
+          { color: 'verde', texto: "Decides hacer ejercicio para sentirte mejor." },
+          { color: 'amarillo', texto: "Aceptas una bebida alcohólica aunque no tienes ganas." },
+          { color: 'rojo', texto: "Consumes una sustancia sin conocer sus efectos." }
+        ]
+      },
+      {
+        titulo: "Nivel 2",
+        opciones: [
+          { color: 'verde', texto: "Hablas con un adulto de confianza sobre tus problemas." },
+          { color: 'amarillo', texto: "Ignoras los consejos de tus amigos." },
+          { color: 'rojo', texto: "Empiezas a fumar a escondidas." }
+        ]
+      },
+      {
+        titulo: "Nivel 3",
+        opciones: [
+          { color: 'verde', texto: "Te unes a un grupo de apoyo y haces nuevos amigos saludables." },
+          { color: 'amarillo', texto: "Dejas de ir a clases porque no te sientes bien." },
+          { color: 'rojo', texto: "Te sientes solo y decides consumir para encajar." }
+        ]
+      }
+    ];
+
+    function crearNiveles() {
+      const container = document.getElementById('nivelesContainer');
+      const nivelGuardado = parseInt(localStorage.getItem('nivelActual')) || 0;
+
+      niveles.forEach((nivel, index) => {
+        const div = document.createElement('div');
+        div.className = 'nivel';
+        div.id = `nivel${index}`;
+        div.innerHTML = `<h2>${nivel.titulo}</h2>` +
+          nivel.opciones.map(opt =>
+            `<button class="btn ${opt.color}" onclick="mostrarMensaje('${opt.color}', ${index})">${opt.texto}</button>`
+          ).join('') +
+          `<div id="resultado${index}" class="mensaje"></div>
+           <div id="preguntas${index}" class="reflexion" style="display:none;">
+             <h3>Reflexiona:</h3>
+             <textarea id="motivo${index}" placeholder="¿Por qué elegiste ese camino?" rows="3"></textarea>
+             <textarea id="sentimiento${index}" placeholder="¿Qué sentimientos tienes al leer estos mensajes?" rows="3"></textarea>
+             <textarea id="futuro${index}" placeholder="¿Cómo crees que estas decisiones afectarán tu futuro?" rows="3"></textarea>
+             <button class="btn verde" onclick="enviarRespuesta(${index})">Enviar Respuestas ✅</button>
+           </div>`;
+        container.appendChild(div);
+        if (index === 0 || index <= nivelGuardado) div.style.display = 'block';
+      });
+    }
+
+    function mostrarMensaje(color, nivel) {
+      const mensajes = {
+        verde: "✅ Eres un ejemplo que inspira a los jóvenes.<br>",
+        amarillo: "😕 Te sientes confundido, pero todavía puedes cambiar.<br>🤔 Tus amigos te presionan, ¿qué decides?",
+        rojo: "❌ Has perdido el control.<br>❌ Tu salud está en peligro."
+      };
+      document.getElementById(`resultado${nivel}`).innerHTML = mensajes[color];
+      document.getElementById(`preguntas${nivel}`).style.display = 'block';
+    }
+
+    function enviarRespuesta(nivel) {
+      const motivo = document.getElementById(`motivo${nivel}`).value;
+      const sentimiento = document.getElementById(`sentimiento${nivel}`).value;
+      const futuro = document.getElementById(`futuro${nivel}`).value;
+
+      if (motivo && sentimiento && futuro) {
+        const nuevaRespuesta = {
+          motivo, sentimiento, futuro,
+          nivel: nivel + 1,
+          fecha: new Date().toLocaleString()
+        };
+        let respuestas = JSON.parse(localStorage.getItem('respuestas')) || [];
+        respuestas.push(nuevaRespuesta);
+        localStorage.setItem('respuestas', JSON.stringify(respuestas));
+
+        let nivelActual = parseInt(localStorage.getItem('nivelActual')) || 0;
+        if (nivel > nivelActual) {
+          localStorage.setItem('nivelActual', nivel);
+        }
+
+        // Mostrar el siguiente nivel
+        document.getElementById(`nivel${nivel}`).style.display = 'none';
+        if (document.getElementById(`nivel${nivel + 1}`)) {
+          document.getElementById(`nivel${nivel + 1}`).style.display = 'block';
+        }
+      }
+    }
+
+    // Crear los niveles al cargar la página
+    window.onload = crearNiveles;
+  </script>
+</body>
+</html>
